@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="pl" data-theme="dark">
+<head>
+    <meta charset="UTF-8">  
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Piłkarski</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+    <!-- Supabase JS Client -->
+    
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="config.js"></script>
+    <div class="quiz-container">
+        <!-- Górny pasek z motywem -->
+        <header class="quiz-header">
+            <h1 class="logo">⚽ Quiz Piłkarski</h1>
+            <button id="theme-toggle" class="theme-btn" title="Zmień motyw">🌙</button>
+        </header>
+
+        <!-- EKRAN STARTOWY -->
+        <div id="start-screen" class="screen active">
+            <div class="welcome-box">
+                <div class="difficulty-selector">
+                    <p>Wybierz poziom trudności:</p>
+                    <div class="diff-buttons">
+                        <button class="diff-btn active" data-diff="mix">Wszystkie 🎲</button>
+                        <button class="diff-btn" data-diff="easy">Łatwy 🍺</button>
+                        <button class="diff-btn" data-diff="medium">Średni 🍻</button>
+                        <button class="diff-btn" data-diff="hard">Trudny 🍻🔥</button>
+                    </div>
+                </div>
+
+                <button id="start-btn" class="primary-btn">Rozpocznij Quiz 🚀</button>
+                <button id="leaderboard-btn" class="secondary-btn">Ranking 🏆</button>
+            </div>
+        </div>
+
+        <!-- EKRAN QUIZU -->
+        <div id="quiz-screen" class="screen">
+            <div class="quiz-info-bar">
+                <span id="question-counter">Pytanie 1/10</span>
+                <span id="score-counter">0</span>
+            </div>
+
+            <div class="quiz-meta">
+                <span id="category-tag" class="category-tag">🗺️ Kategoria</span>
+                <span id="beer-difficulty" class="beer-difficulty easy">🍺 Łatwy</span>
+            </div>
+
+            <div class="timer-container">
+                <div id="timer-bar" class="timer-bar"></div>
+            </div>
+            <div class="timer-text"><span id="timer">15s</span></div>
+
+            <div class="question-box">
+                <h3 id="question-text">Treść pytania pojawi się tutaj...</h3>
+            </div>
+
+            <div id="answers-container" class="answers-grid">
+                <!-- Odpowiedzi generowane dynamicznie -->
+            </div>
+        </div>
+
+        <!-- EKRAN WYNIKÓW -->
+        <div id="result-screen" class="screen">
+            <div class="result-box">
+                <h2>Koniec Quizu! ⚽</h2>
+                <p id="final-score-text">Twój wynik końcowy: 0</p>
+                <p id="bonus-info-text">Dobra robota!</p>
+
+                <div class="save-score-section">
+                    <input type="text" id="player-nickname" placeholder="Wpisz swój nick..." maxlength="15">
+                    <button id="save-score-btn" class="primary-btn">Zapisz wynik 💾</button>
+                </div>
+
+                <button id="restart-btn" class="secondary-btn">Zagraj ponownie 🔄</button>
+            </div>
+        </div>
+
+        <!-- EKRAN RANKINGU (LEADERBOARD) -->
+        <div id="leaderboard-screen" class="screen">
+            <h2>🏆 Tabela Wyników</h2>
+            
+            <!-- Przyciski filtrowania -->
+            <div class="filter-buttons">
+                <button class="filter-btn active" data-filter="all">Wszystkie</button>
+                <button class="filter-btn" data-filter="mix">Mix</button>
+                <button class="filter-btn" data-filter="easy">Łatwy</button>
+                <button class="filter-btn" data-filter="medium">Średni</button>
+                <button class="filter-btn" data-filter="hard">Trudny</button>
+            </div>
+
+            <div id="leaderboard-list" class="leaderboard-list">
+                <p class="loading-text">Ładowanie wyników...</p>
+            </div>
+            <button id="back-to-start-btn" class="secondary-btn">Powrót do menu 🏠</button>
+        </div>
+
+        <!-- DOLNY PASEK NAWIGACYJNY -->
+        <nav class="bottom-nav">
+            <button class="nav-btn" id="nav-home" title="Strona główna">
+                🏠
+                <span>Start</span>
+            </button>
+            <button class="nav-btn" id="nav-leaderboard" title="Ranking">
+                🏆
+                <span>Ranking</span>
+            </button>
+        </nav>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

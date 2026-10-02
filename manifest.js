@@ -1,0 +1,21 @@
+{
+    "name": "Quiz Piłkarski",
+    "short_name": "QuizPiłkarski",
+    "start_url": "./index.html",
+    "display": "standalone",
+    "background_color": "#121212",
+    "theme_color": "#e50914",
+    "orientation": "portrait",
+    "icons": [
+      {
+        "src": "icon-192.png",
+        "sizes": "192x192",
+        "type": "image/png"
+      },
+      {
+        "src": "icon-512.png",
+        "sizes": "512x512",
+        "type": "image/png"
+      }
+    ]
+  }
