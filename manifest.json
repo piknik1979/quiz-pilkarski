@@ -1,6 +1,6 @@
 {
   "name": "Quiz Piłkarski",
-  "short_name": "Quiz Płkarski",
+  "short_name": "Quiz Piłkarski",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#121212",

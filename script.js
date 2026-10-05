@@ -189,7 +189,7 @@ if (!window.supabaseClient) {
         beerDifficulty.textContent = `🍺 ${diffNamePL}`;
     }
   
-    if (answersContainer) {
+   if (answersContainer) {
       answersContainer.innerHTML = '';
       
       let options = q.options;
@@ -207,16 +207,25 @@ if (!window.supabaseClient) {
           return;
       }
   
-      const correctIndex = q.correct_index;
-  
-      options.forEach((opt, index) => {
+      // --- LOSOWANIE KOLEJNOŚCI ODPOWIEDZI ---
+      // Pobieramy tekst poprawnej odpowiedzi na podstawie oryginalnego correct_index
+      const correctOptionText = options[q.correct_index];
+      
+      // Mieszamy tablicę opcji w sposób losowy
+      const shuffledOptions = [...options].sort(() => Math.random() - 0.5);
+      
+      // Znajdujemy, pod jakim nowym indeksem znalazła się poprawna odpowiedź
+      const newCorrectIndex = shuffledOptions.indexOf(correctOptionText);
+
+      shuffledOptions.forEach((opt, index) => {
           const btn = document.createElement('button');
           btn.classList.add('answer-btn');
           btn.textContent = opt;
-          btn.addEventListener('click', () => selectAnswer(index, correctIndex));
+          // Przekazujemy nowy, wylosowany indeks poprawnej odpowiedzi
+          btn.addEventListener('click', () => selectAnswer(index, newCorrectIndex));
           answersContainer.appendChild(btn);
       });
-  }
+    }
     startTimer();
   }
   
