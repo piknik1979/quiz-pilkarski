@@ -95,7 +95,7 @@ if (!window.supabaseClient) {
     });
   }
   
-  // --- START QUIZU (Pobieranie pytań z Supabase) ---
+  // --- START QUIZU (Pobieranie pytań z Supabase z pełną paginacją) ---
   if (startBtn) {
     startBtn.addEventListener('click', async () => {
         startBtn.disabled = true;
@@ -108,14 +108,36 @@ if (!window.supabaseClient) {
 
             console.log("Pobieranie pytań z tabeli:", CONFIG.SUPABASE_TABLE);
             
-            const { data, error, status } = await supabaseClient
-                .from(CONFIG.SUPABASE_TABLE)
-                .select('*');
-            
-            console.log("Supabase response status:", status, "data:", data, "error:", error);
+            let allData = [];
+            let from = 0;
+            let step = 1000;
+            let keepFetching = true;
 
-            if (error) throw error;
-  
+            while (keepFetching) {
+                const { data: chunkData, error, status } = await supabaseClient
+                    .from(CONFIG.SUPABASE_TABLE)
+                    .select('*')
+                    .range(from, from + step - 1);
+            
+                if (error) throw error;
+
+                if (chunkData && chunkData.length > 0) {
+                    allData = allData.concat(chunkData);
+                    if (chunkData.length < step) {
+                        keepFetching = false;
+                    } else {
+                        from += step;
+                    }
+                } else {
+                    keepFetching = false;
+                }
+                
+                if (from >= 5000) keepFetching = false; // Bezpiecznik limitu
+            }
+
+            const data = allData;
+            console.log("Łączna liczba pobranych pytań z całej bazy:", data.length);
+
             if (!data || data.length === 0) {
                 console.warn('Tabela w bazie jest całkowicie pusta lub brak uprawnień!');
                 alert('Brak pytań w bazie danych! Sprawdź czy tabela istnieje.');
@@ -131,11 +153,34 @@ if (!window.supabaseClient) {
   
             if (availableData.length === 0) {
                 console.warn(`Brak pytań dla wybranego poziomu (${selectedDifficulty}), używam wszystkich dostępnych.`);
-                availableData = data; 
+                availableData = data;
             }
   
-            // Losujemy do 10 pytań z dostępnej puli
-            currentQuestions = availableData.sort(() => Math.random() - 0.5).slice(0, 10);
+            // --- INTELIGENTNE LOSOWANIE (Zapobieganie kumulacji tej samej kategorii) ---
+            let shuffled = [...availableData].sort(() => Math.random() - 0.5);
+            let selected = [];
+            let categoriesUsed = {};
+
+            for (let q of shuffled) {
+                let cat = q.category || 'Inne';
+                if (!categoriesUsed[cat]) categoriesUsed[cat] = 0;
+                
+                // Pozwól na maksymalnie 2 pytania z tej samej kategorii w jednym quizie
+                if (categoriesUsed[cat] < 2 || selected.length >= 8) {
+                    selected.push(q);
+                    categoriesUsed[cat]++;
+                }
+                
+                if (selected.length === 10) break;
+            }
+
+            // Jeśli zabrakło unikalnych, dobierz cokolwiek do 10
+            if (selected.length < 10) {
+                let remaining = shuffled.filter(q => !selected.includes(q));
+                selected = selected.concat(remaining.slice(0, 10 - selected.length));
+            }
+
+            currentQuestions = selected.sort(() => Math.random() - 0.5);
             
             currentIndex = 0;
             score = 0;
@@ -208,20 +253,14 @@ if (!window.supabaseClient) {
       }
   
       // --- LOSOWANIE KOLEJNOŚCI ODPOWIEDZI ---
-      // Pobieramy tekst poprawnej odpowiedzi na podstawie oryginalnego correct_index
       const correctOptionText = options[q.correct_index];
-      
-      // Mieszamy tablicę opcji w sposób losowy
       const shuffledOptions = [...options].sort(() => Math.random() - 0.5);
-      
-      // Znajdujemy, pod jakim nowym indeksem znalazła się poprawna odpowiedź
       const newCorrectIndex = shuffledOptions.indexOf(correctOptionText);
 
       shuffledOptions.forEach((opt, index) => {
           const btn = document.createElement('button');
           btn.classList.add('answer-btn');
           btn.textContent = opt;
-          // Przekazujemy nowy, wylosowany indeks poprawnej odpowiedzi
           btn.addEventListener('click', () => selectAnswer(index, newCorrectIndex));
           answersContainer.appendChild(btn);
       });
