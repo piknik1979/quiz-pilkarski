@@ -40,22 +40,31 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 100vh;
-    padding: 10px;
-    padding-bottom: 70px; /* Miejsce na dolne menu */
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+    /* Pełny ekran na urządzeniach mobilnych */
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
 }
 
 .quiz-container {
     width: 100%;
-    max-width: 480px;
+    height: 100%;
+    max-width: 100%;
+    max-height: 100%;
     background-color: var(--card-bg);
-    border-radius: 16px;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.3);
-    padding: 20px;
+    border-radius: 0;
+    box-shadow: none;
+    padding: 15px;
+    padding-bottom: 75px;
+    /* Miejsce na dolne menu PWA */
     display: flex;
     flex-direction: column;
     position: relative;
-    border: 1px solid var(--border-color);
+    border: none;
+    overflow-y: auto;
 }
 
 .quiz-header {
@@ -183,9 +192,20 @@ body {
     font-weight: bold;
 }
 
-.beer-difficulty.easy { background-color: #2e7d32; color: white; }
-.beer-difficulty.medium { background-color: #f57c00; color: white; }
-.beer-difficulty.hard { background-color: #c62828; color: white; }
+.beer-difficulty.easy {
+    background-color: #2e7d32;
+    color: white;
+}
+
+.beer-difficulty.medium {
+    background-color: #f57c00;
+    color: white;
+}
+
+.beer-difficulty.hard {
+    background-color: #c62828;
+    color: white;
+}
 
 .timer-container {
     width: 100%;
@@ -324,10 +344,26 @@ body {
     border-radius: 4px;
     margin-left: 5px;
 }
-.lb-badge.easy { background: #2e7d32; color: white; }
-.lb-badge.medium { background: #f57c00; color: white; }
-.lb-badge.hard { background: #c62828; color: white; }
-.lb-badge.mix { background: #555; color: white; }
+
+.lb-badge.easy {
+    background: #2e7d32;
+    color: white;
+}
+
+.lb-badge.medium {
+    background: #f57c00;
+    color: white;
+}
+
+.lb-badge.hard {
+    background: #c62828;
+    color: white;
+}
+
+.lb-badge.mix {
+    background: #555;
+    color: white;
+}
 
 .lb-pts {
     color: var(--primary-color);
