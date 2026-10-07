@@ -1,7 +1,8 @@
 {
+  "id": "/?v=2",
   "name": "Quiz Piłkarski",
   "short_name": "Quiz Piłkarski",
-  "start_url": "./index.html",
+  "start_url": "./index.html?v=2",
   "display": "fullscreen",
   "background_color": "#121212",
   "theme_color": "#e50914",
